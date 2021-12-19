@@ -24,7 +24,6 @@ if __name__ == "__main__":
     ]
     args, options = init_args(), customer_args(baseline_args)
     config_parser = ConfigParser.from_args(args, options)
-    data_loader = init_data_loader(config_parser)
     config = config_parser.config
     saved_dir = Path(config.project_root) / "saved" / "performance"  # init saved directory
     os.makedirs(saved_dir, exist_ok=True)  # create empty directory
@@ -41,6 +40,7 @@ if __name__ == "__main__":
         setattr(config, "seed", seed)
         log = {"arch_type": config.arch_config["type"], "seed": config.seed, arch_attr: value}
         set_seed(log["seed"])
+        data_loader = init_data_loader(config_parser)
         trainer = run(config_parser, data_loader)
         log.update(test(trainer, data_loader))
         trainer.save_log(log, saved_path=saved_path)
