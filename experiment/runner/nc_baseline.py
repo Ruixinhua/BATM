@@ -6,7 +6,13 @@ from experiment.config import ConfigParser
 from experiment.config import init_args, customer_args, set_seed
 from experiment.runner.nc_base import run, test, init_data_loader
 
-default_seeds = [42, 2020, 2021, 25, 4]  # setup default seeds
+# setup default values
+DEFAULT_VALUES = {
+    "seeds": [42, 2020, 2021, 25, 4],
+    "head_num": [10, 30, 50, 70, 100, 150, 180, 200],
+    "embedding_type": ["distilbert-base-uncased", "bert-base-uncased", "roberta-base,allenai/longformer-base-4096",
+                       "xlnet-base-cased"]
+}
 
 
 if __name__ == "__main__":
@@ -24,8 +30,9 @@ if __name__ == "__main__":
     os.makedirs(saved_dir, exist_ok=True)  # create empty directory
     arch_attr = config.get("arch_attr", "base")  # test an architecture attribute
     saved_path = saved_dir / f'{config.data_config["name"].replace("/", "_")}_{arch_attr}.csv'
-    test_values = config.get("values", "baseline").split(",")  # acquires test values for a given arch attribute
-    seeds = [int(s) for s in config.seeds.split(",")] if hasattr(config, "seeds") else default_seeds
+    # acquires test values for a given arch attribute
+    test_values = config.get("values").split(",") if hasattr(config, "values") else DEFAULT_VALUES.get(arch_attr)
+    seeds = [int(s) for s in config.seeds.split(",")] if hasattr(config, "seeds") else DEFAULT_VALUES.get("seeds")
     for value, seed in product(test_values, seeds):
         try:
             config.arch_config[arch_attr] = ast.literal_eval(value)

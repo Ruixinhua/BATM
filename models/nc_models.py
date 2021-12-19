@@ -78,10 +78,13 @@ class PretrainedBaseline(BaseModel):
                          "bert-base-uncased": "num_hidden_layers", "roberta-base": "num_hidden_layers",
                          "allenai/longformer-base-4096": "num_hidden_layers",
                          "transfo-xl-wt103": "n_layer"}
+        max_layers = {"bert-base-uncased": 12, "distilbert-base-uncased": 6, "allenai/longformer-base-4096": 12,
+                      "xlnet-base-cased": 12, "roberta-base": 12}
         config = AutoConfig.from_pretrained(self.embedding_type, num_labels=self.num_classes)
+        n_layers = min(self.n_layers, max_layers[self.embedding_type])
         if self.embedding_type == "allenai/longformer-base-4096":
-            config.attention_window = config.attention_window[:self.n_layers]
-        config.__dict__.update({layer_mapping[self.embedding_type]: self.n_layers, "pad_token_id": 0})
+            config.attention_window = config.attention_window[:n_layers]
+        config.__dict__.update({layer_mapping[self.embedding_type]: n_layers, "pad_token_id": 0})
         if self.use_pretrained:
             self.model = AutoModelForSequenceClassification.from_pretrained(self.embedding_type, config=config)
         else:
