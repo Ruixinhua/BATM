@@ -26,7 +26,7 @@ if __name__ == "__main__":
     saved_path = saved_dir / f'{config.data_config["name"].replace("/", "_")}_{arch_attr}.csv'
     test_values = config.get("values", "baseline").split(",")  # acquires test values for a given arch attribute
     seeds = [int(s) for s in config.seeds.split(",")] if hasattr(config, "seeds") else default_seeds
-    for seed, value in product(seeds, test_values):
+    for value, seed in product(test_values, seeds):
         try:
             config.arch_config[arch_attr] = ast.literal_eval(value)
         except ValueError:
