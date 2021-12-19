@@ -30,6 +30,7 @@ class Configuration:
         self.data_root = os.path.join(self.project_root, "dataset")
         self.save_dir = kwargs.pop("save_dir", os.path.join(self.project_root, "saved"))
         self.seed = kwargs.pop("seed", 42)
+        self.sub_configs = ["arch_config", "data_config", "trainer_config", "optimizer_config", "scheduler_config"]
 
         # parameters for architecture by default
         self.arch_config = {
@@ -69,7 +70,23 @@ class Configuration:
                 raise err
 
     def get(self, key, default=None):
-        return getattr(self, key) if hasattr(self, key) else default
+        if hasattr(self, key):
+            return getattr(self, key)
+        else:
+            for sub in self.sub_configs:
+                sub_config = getattr(self, sub)
+                if key in sub_config:
+                    return sub_config[key]
+            return default
+
+    def set(self, key, value):
+        if hasattr(self, key):
+            setattr(self, key, value)
+        else:
+            for sub in self.sub_configs:
+                sub_config = getattr(self, sub)
+                if key in sub_config:
+                    sub_config[key] = value
 
     def update(self, config_dict: Dict[str, Any]):
         """

@@ -34,10 +34,10 @@ if __name__ == "__main__":
     seeds = [int(s) for s in config.seeds.split(",")] if hasattr(config, "seeds") else DEFAULT_VALUES.get("seeds")
     for value, seed in product(test_values, seeds):
         try:
-            config.arch_config[arch_attr] = ast.literal_eval(value)
+            config.set(arch_attr, ast.literal_eval(value))
         except ValueError:
-            config.arch_config[arch_attr] = value
-        setattr(config, "seed", seed)
+            config.set(arch_attr, value)
+        config.set("seed", seed)
         log = {"arch_type": config.arch_config["type"], "seed": config.seed, arch_attr: value}
         set_seed(log["seed"])
         data_loader = init_data_loader(config_parser)
