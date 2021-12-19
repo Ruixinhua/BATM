@@ -82,11 +82,10 @@ class Configuration:
     def set(self, key, value):
         if hasattr(self, key):
             setattr(self, key, value)
-        else:
-            for sub in self.sub_configs:
-                sub_config = getattr(self, sub)
-                if key in sub_config:
-                    sub_config[key] = value
+        for sub in self.sub_configs:
+            sub_config = getattr(self, sub)
+            if key in sub_config:
+                sub_config[key] = value
 
     def update(self, config_dict: Dict[str, Any]):
         """
