@@ -1,0 +1,2 @@
+python3 -m venv venv
+pip install torch==1.10.0+cu111 -f https://download.pytorch.org/whl/cu111/torch_stable.html
