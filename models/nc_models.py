@@ -9,7 +9,7 @@ from models.layers import AttLayer, MultiHeadedAttention, activation_layer
 
 
 class BaseClassifyModel(BaseModel):
-    def __init__(self, bert=None, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__()
         self.att_weight = None
         self.output_hidden_states = kwargs.pop("output_hidden_states", True)
@@ -36,7 +36,7 @@ class BaseClassifyModel(BaseModel):
             if self.embedding_type == "allenai/longformer-base-4096":
                 self.config.attention_window = self.config.attention_window[:self.n_layers]
             embedding = AutoModel.from_pretrained(self.embedding_type, config=self.config)
-            self.embedding = bert(self.config) if bert else embedding
+            self.embedding = kwargs.get("bert")(self.config) if "bert" in kwargs else embedding
             self.embed_dim = self.config.dim if hasattr(self.config, "dim") else self.config.hidden_size
         self.classifier = nn.Linear(self.embed_dim, self.num_classes)
 
@@ -101,8 +101,8 @@ class PretrainedBaseline(BaseModel):
 
 
 class BertAvgClassifyModel(BaseClassifyModel):
-    def __init__(self, bert=None, **kwargs):
-        super(BertAvgClassifyModel, self).__init__(bert, **kwargs)
+    def __init__(self, **kwargs):
+        super(BertAvgClassifyModel, self).__init__(**kwargs)
         self.att_layer = AttLayer(self.embed_dim, 256)
 
     def forward(self, input_feat, return_attention=False, inputs_embeds=None, **kwargs):
@@ -115,8 +115,8 @@ class BertAvgClassifyModel(BaseClassifyModel):
 
 
 class TopicExtractorClassifyModel(BaseClassifyModel):
-    def __init__(self, bert=None, **kwargs):
-        super().__init__(bert, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.__dict__.update(kwargs)
         self.act_name = self.act_name if hasattr(self, "act_name") else None
         self.return_entropy = self.return_entropy if hasattr(self, "return_entropy") else False

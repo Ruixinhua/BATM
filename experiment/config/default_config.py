@@ -3,7 +3,7 @@ default_configs = {
         "n_layers": 1,
     },
     "BiAttentionClassifyModel": {
-        "head_num": None, "head_dim": 20, "return_entropy": False, "alpha": 0.01, "n_layers": 1
+        "head_num": None, "head_dim": 20, "return_entropy": False, "alpha": 0.01, "n_layers": 1, "variant_name": "base",
     },
     "TopicExtractorClassifyModel": {
         "head_num": None, "head_dim": 20, "return_entropy": False, "alpha": 0.01, "n_layers": 1

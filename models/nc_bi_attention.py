@@ -8,13 +8,17 @@ from models.layers import AttLayer, MultiHeadedAttention
 
 
 class BiAttentionClassifyModel(BaseClassifyModel):
-    def __init__(self, bert=None, **kwargs):
-        super(BiAttentionClassifyModel, self).__init__(bert, **kwargs)
+    def __init__(self, **kwargs):
+        super(BiAttentionClassifyModel, self).__init__(**kwargs)
         self.variant_name = kwargs.pop("variant_name", "base")
         topic_dim = self.head_num * self.head_dim
+        # the structure of basic model
         self.final = nn.Linear(self.embed_dim, self.embed_dim)
-        self.topic_layer = nn.Sequential(nn.Linear(self.embed_dim, topic_dim), nn.Tanh(),
-                                         nn.Linear(topic_dim, self.head_num))
+        if self.variant_name == "base":
+            self.topic_layer = nn.Sequential(nn.Linear(self.embed_dim, topic_dim), nn.Tanh(),
+                                             nn.Linear(topic_dim, self.head_num))
+        elif self.variant_name == "raw":
+            self.topic_layer = nn.Linear(self.embed_dim, self.head_num)
         self.projection = AttLayer(self.embed_dim, 128)
 
     def extract_topic(self, input_feat):

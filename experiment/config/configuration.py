@@ -2,7 +2,7 @@ import copy
 import os
 from pathlib import Path
 from typing import Dict, Union, Any
-from utils import write_json, read_json
+from utils import write_json, read_json, get_project_root
 
 
 class Configuration:
@@ -24,9 +24,7 @@ class Configuration:
         self.resume = kwargs.pop("resume", None)
         # setup default relative project path
         self.project_name = kwargs.pop("project_name", "bi_attention")
-        file_parts = Path(os.getcwd()).parts
-        abs_path = Path(f"{os.sep}".join(file_parts[:file_parts.index(self.project_name)+1]))
-        self.project_root = kwargs.pop("project_root", os.path.relpath(abs_path, os.getcwd()))
+        self.project_root = kwargs.pop("project_root", get_project_root(project_name=self.project_name))
         self.data_root = os.path.join(self.project_root, "dataset")
         self.save_dir = kwargs.pop("save_dir", os.path.join(self.project_root, "saved"))
         self.seed = kwargs.pop("seed", 42)

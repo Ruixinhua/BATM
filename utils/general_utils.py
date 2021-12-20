@@ -53,3 +53,14 @@ def prepare_device(n_gpu_use):
     device = torch.device('cuda:0' if n_gpu_use > 0 else 'cpu')
     list_ids = list(range(n_gpu_use))
     return device, list_ids
+
+
+def del_index_column(df):
+    return df.loc[:, ~df.columns.str.contains("^Unnamed")]
+
+
+def get_project_root(**kwargs):
+    project_name = kwargs.pop("project_name", "bi_attention")
+    file_parts = Path(os.getcwd()).parts
+    abs_path = Path(f"{os.sep}".join(file_parts[:file_parts.index(project_name) + 1]))
+    return os.path.relpath(abs_path, os.getcwd())
