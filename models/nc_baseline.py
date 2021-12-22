@@ -36,7 +36,7 @@ class NRMSNewsEncoderModel(BaseClassifyModel):
 
     def forward(self, input_feat, **kwargs):
         x = self.embedding_layer(input_feat)
-        if self.varaint_name == "one_att":
+        if self.variant_name == "one_att":
             x = self.news_att(x)[0]
         else:
             x = self.mha_encoder(x, x, x)[0]
