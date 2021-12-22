@@ -10,7 +10,7 @@ from utils.general_utils import read_json, write_json
 
 def clean_df(data_df):
     data_df.dropna(subset=["title", "body"], inplace=True, how="all")
-    data_df.fillna("", inplace=True)
+    data_df.fillna("empty", inplace=True)
     data_df["title"] = data_df.title.apply(lambda s: clean_text(s))
     data_df["body"] = data_df.body.apply(lambda s: clean_text(s))
     return data_df

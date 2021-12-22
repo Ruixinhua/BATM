@@ -38,7 +38,8 @@ if __name__ == "__main__":
         except ValueError:
             config.set(arch_attr, value)
         config.set("seed", seed)
-        log = {"arch_type": config.arch_config["type"], "seed": config.seed, arch_attr: value}
+        log = {"arch_type": config.arch_config["type"], "seed": config.seed, arch_attr: value,
+               "variant_name": config.arch_config.get("variant_name", None)}
         set_seed(log["seed"])
         data_loader = init_data_loader(config_parser)
         trainer = run(config_parser, data_loader)
