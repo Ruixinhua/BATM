@@ -2,6 +2,9 @@ default_configs = {
     "PretrainedBaseline": {
         "n_layers": 1,
     },
+    "TextCNNClassifyModel": {
+        "num_filters": 100, "filter_sizes": (2, )
+    },
     "BiAttentionClassifyModel": {
         "head_num": None, "head_dim": 20, "return_entropy": False, "alpha": 0.01, "n_layers": 1, "variant_name": "base",
     },

@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from base import BaseTrainer
+from base.base_trainer import BaseTrainer
 from utils import MetricTracker
 from tqdm import tqdm
 

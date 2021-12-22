@@ -1,7 +1,7 @@
 from pathlib import Path
 from torch.utils.data import DataLoader
 from utils import load_dataset_df, load_word_dict, load_embeddings
-from base import BaseDatasetBert, BaseDataset
+from base.base_dataset import BaseDatasetBert, BaseDataset
 
 
 class NewsDataLoader:

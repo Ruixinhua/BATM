@@ -30,7 +30,7 @@ if __name__ == "__main__":
     arch_attr = config.get("arch_attr", "base")  # test an architecture attribute
     saved_path = saved_dir / f'{config.data_config["name"].replace("/", "_")}_{arch_attr}.csv'
     # acquires test values for a given arch attribute
-    test_values = config.get("values").split(",") if hasattr(config, "values") else DEFAULT_VALUES.get(arch_attr)
+    test_values = config.get("values").split(",") if hasattr(config, "values") else DEFAULT_VALUES.get(arch_attr, [])
     seeds = [int(s) for s in config.seeds.split(",")] if hasattr(config, "seeds") else DEFAULT_VALUES.get("seeds")
     for value, seed in product(test_values, seeds):
         try:
