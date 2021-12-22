@@ -24,7 +24,7 @@ class BiAttentionClassifyModel(BaseClassifyModel):
         if self.variant_name == "gru" or self.variant_name == "combined_gru":
             self.gru = nn.GRU(self.embed_dim, self.embed_dim, 2, batch_first=True)
         if self.variant_name == "weight_mha":
-            head_dim = self.embed_dim / 12
+            head_dim = self.embed_dim // 12
             self.sentence_encoder = MultiHeadedAttention(12, head_dim, self.embed_dim)
         if self.variant_name == "combined_mha":
             self.query = nn.Linear(self.embed_dim, topic_dim)
