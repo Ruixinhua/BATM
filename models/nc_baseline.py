@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 from models.layers import MultiHeadedAttention, AttLayer
 from models.nc_models import BaseClassifyModel
@@ -42,4 +43,30 @@ class NRMSNewsEncoderModel(BaseClassifyModel):
             x = self.mha_encoder(x, x, x)[0]
             x = nn.Dropout(self.dropout_rate)(x)
             x = self.news_att(x)[0]
+        return self.classify_layer(x)
+
+
+class GRUAttClassifierModel(BaseClassifyModel):
+    def __init__(self, **kwargs):
+        super(GRUAttClassifierModel, self).__init__(**kwargs)
+        if self.variant_name == "gru_att":
+            self.gru = nn.GRU(self.embed_dim, self.embed_dim, 2, batch_first=True)
+            self.news_att = AttLayer(self.embed_dim, 128)
+        elif self.variant_name == "biLSTM_att":
+            self.gru = nn.LSTM(self.embed_dim, self.embed_dim, batch_first=True, bidirectional=True)
+            self.news_att = AttLayer(self.embed_dim * 2, 128)
+            self.classifier = nn.Linear(self.embed_dim * 2, self.num_classes)
+
+    def run_gru(self, embedding, length):
+        embedding = pack_padded_sequence(embedding, lengths=length.cpu(), batch_first=True, enforce_sorted=False)
+        y, _ = self.gru(embedding)  # extract interest from history behavior
+        y, _ = pad_packed_sequence(y, batch_first=True, total_length=self.max_length)
+        return y
+
+    def forward(self, input_feat, **kwargs):
+        x = self.embedding_layer(input_feat)
+        length = torch.sum(input_feat["mask"], dim=-1)
+        x = self.run_gru(x, length)
+        x = nn.Dropout(self.dropout_rate)(x)
+        x = self.news_att(x)[0]
         return self.classify_layer(x)

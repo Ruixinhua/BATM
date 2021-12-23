@@ -8,6 +8,9 @@ default_configs = {
     "NRMSNewsEncoderModel": {
         "variant_name": "base"
     },
+    "GRUAttClassifierModel": {
+        "variant_name": "gru_att"
+    },
     "BiAttentionClassifyModel": {
         "head_num": None, "head_dim": 20, "return_entropy": False, "alpha": 0.01, "n_layers": 1, "variant_name": "base",
     },

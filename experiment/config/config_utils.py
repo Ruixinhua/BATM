@@ -43,11 +43,10 @@ def customer_args(args=None):
         CustomArgs(["-nl", "--n_layers"], type=int, target="arch_config"),
         CustomArgs(["-ed", "--embedding_dim"], type=int, target="arch_config"),
         CustomArgs(["-re", "--return_entropy"], type=int, target="arch_config"),
-        CustomArgs(["-al", "--add_ln"], type=int, target="arch_config"),
         CustomArgs(["-ap", "--add_pos"], type=int, target="arch_config"),
         CustomArgs(["-hn", "--head_num"], type=int, target="arch_config"),
         CustomArgs(["-hd", "--head_dim"], type=int, target="arch_config"),
-        CustomArgs(["-alp", "--alpha"], type=float, target="arch_config"),
+        CustomArgs(["-al", "--alpha"], type=float, target="arch_config"),
         CustomArgs(["-dr", "--dropout_rate"], type=float, target="arch_config"),
         # dataloader params
         CustomArgs(["-na", "--name"], type=str, target="data_config"),
