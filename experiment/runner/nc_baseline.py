@@ -10,7 +10,7 @@ from experiment.runner.nc_base import run, test, init_data_loader
 DEFAULT_VALUES = {
     "seeds": [42, 2020, 2021, 25, 4],
     "head_num": [10, 30, 50, 70, 100, 150, 180, 200],
-    "embedding_type": ["distilbert-base-uncased", "bert-base-uncased", "roberta-base,allenai/longformer-base-4096",
+    "embedding_type": ["distilbert-base-uncased", "bert-base-uncased", "roberta-base", "allenai/longformer-base-4096",
                        "xlnet-base-cased"]
 }
 

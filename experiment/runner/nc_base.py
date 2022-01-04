@@ -1,8 +1,12 @@
+import os
+from typing import Union
+
 import models as module_arch
 import experiment.data_loader as module_data
 from experiment.data_loader import NewsDataLoader
 from experiment.trainer import NCTrainer
 from experiment.config import ConfigParser, init_args, customer_args, set_seed
+from utils.topic_utils import get_topic_dist, save_topic_info
 
 
 def init_default_model(config_parser: ConfigParser, data_loader: NewsDataLoader):
@@ -26,6 +30,7 @@ def run(config_parser: ConfigParser, data_loader: NewsDataLoader):
     logger.info(model)
     trainer = NCTrainer(model, config_parser, data_loader)
     trainer.train()
+    topic_evaluation(trainer, data_loader, config_parser.save_dir)
     return trainer
 
 
@@ -36,6 +41,14 @@ def test(trainer: NCTrainer, data_loader: NewsDataLoader):
     # run test
     log.update(trainer.evaluate(data_loader.test_loader, trainer.best_model, prefix="test"))
     return log
+
+
+def topic_evaluation(trainer: NCTrainer, data_loader: NewsDataLoader, path: Union[str, os.PathLike]):
+    # statistic topic distribution of Topic Attention network
+    reverse_dict = {v: k for k, v in data_loader.word_dict.items()}
+    topic_dist = get_topic_dist(trainer, list(data_loader.word_dict.values()))
+    topic_result = save_topic_info(path, topic_dist, reverse_dict, data_loader)
+    return topic_result
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ def perform_aggregate(group_by: list, **kwargs):
             group = group.drop(columns=metrics + ["seed", "run_id", "dropout_rate"]).drop_duplicates()
             group[metrics] = pd.DataFrame([mean_values], index=group.index)
             stat_df = stat_df.append(group, ignore_index=True)
-        stat_df.to_csv(saved_path / file_name, columns=group.columns)
+        stat_df.to_csv(saved_path / file_name)
     return stat_df
 
 
