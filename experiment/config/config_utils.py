@@ -42,7 +42,7 @@ def customer_args(args=None):
         CustomArgs(["-up", "--use_pretrained"], type=int, target="arch_config"),
         CustomArgs(["-nl", "--n_layers"], type=int, target="arch_config"),
         CustomArgs(["-ed", "--embedding_dim"], type=int, target="arch_config"),
-        CustomArgs(["-re", "--return_entropy"], type=int, target="arch_config"),
+        CustomArgs(["-ec", "--entropy_constraint"], type=int, target="arch_config"),
         CustomArgs(["-ap", "--add_pos"], type=int, target="arch_config"),
         CustomArgs(["-hn", "--head_num"], type=int, target="arch_config"),
         CustomArgs(["-hd", "--head_dim"], type=int, target="arch_config"),

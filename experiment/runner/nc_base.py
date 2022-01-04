@@ -1,8 +1,10 @@
 import os
-from typing import Union
-
+import numpy as np
 import models as module_arch
 import experiment.data_loader as module_data
+from typing import Union
+from torch.backends import cudnn
+from scipy.stats import entropy
 from experiment.data_loader import NewsDataLoader
 from experiment.trainer import NCTrainer
 from experiment.config import ConfigParser, init_args, customer_args, set_seed
@@ -25,12 +27,13 @@ def init_data_loader(config_parser: ConfigParser):
 
 
 def run(config_parser: ConfigParser, data_loader: NewsDataLoader):
+    cudnn.benchmark = False
+    cudnn.deterministic = True
     logger = config_parser.get_logger("train")
     model = init_default_model(config_parser, data_loader)
     logger.info(model)
     trainer = NCTrainer(model, config_parser, data_loader)
     trainer.train()
-    topic_evaluation(trainer, data_loader, config_parser.save_dir)
     return trainer
 
 
@@ -48,6 +51,7 @@ def topic_evaluation(trainer: NCTrainer, data_loader: NewsDataLoader, path: Unio
     reverse_dict = {v: k for k, v in data_loader.word_dict.items()}
     topic_dist = get_topic_dist(trainer, list(data_loader.word_dict.values()))
     topic_result = save_topic_info(path, topic_dist, reverse_dict, data_loader)
+    topic_result.update({"token_entropy": np.mean(entropy(topic_dist, axis=1))})
     return topic_result
 
 

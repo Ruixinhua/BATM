@@ -12,10 +12,10 @@ default_configs = {
         "variant_name": "gru_att"
     },
     "BiAttentionClassifyModel": {
-        "head_num": None, "head_dim": 20, "return_entropy": False, "alpha": 0.01, "n_layers": 1, "variant_name": "base",
+        "head_num": None, "head_dim": 20, "entropy_constraint": False, "alpha": 0.01, "n_layers": 1, "variant_name": "base",
     },
     "TopicExtractorClassifyModel": {
-        "head_num": None, "head_dim": 20, "return_entropy": False, "alpha": 0.01, "n_layers": 1
+        "head_num": None, "head_dim": 20, "entropy_constraint": False, "alpha": 0.01, "n_layers": 1
     },
     "FastformerClassifyModel": {
         "embedding_dim": 300, "n_layers": 2, "hidden_act": "gelu", "head_num": 15, "type_vocab_size": 2,

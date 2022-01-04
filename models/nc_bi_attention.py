@@ -77,7 +77,7 @@ class BiAttentionClassifyModel(BaseClassifyModel):
         else:
             doc_embedding, doc_topic = self.projection(topic_vec)  # (N, E), (N, H)
         output = self.classify_layer(doc_embedding, topic_weight, return_attention)
-        if self.return_entropy:
+        if self.entropy_constraint:
             entropy_sum = torch.sum(-topic_weight * torch.log(1e-6 + topic_weight)).squeeze() / self.head_num
             output = output + (entropy_sum,)
         return output
