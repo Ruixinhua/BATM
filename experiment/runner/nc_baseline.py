@@ -30,7 +30,8 @@ if __name__ == "__main__":
     os.makedirs(saved_dir, exist_ok=True)  # create empty directory
     arch_attr = config.get("arch_attr", "base")  # test an architecture attribute
     saved_name = f'{config.data_config["name"].replace("/", "_")}_{arch_attr}'
-    if config.evaluate_topic:
+    evaluate_topic = config.get("evaluate_topic", 0)
+    if evaluate_topic:
         saved_name += "_evaluate_topic"
     # acquires test values for a given arch attribute
     test_values = config.get("values").split(",") if hasattr(config, "values") else DEFAULT_VALUES.get(arch_attr, [0])
@@ -47,7 +48,7 @@ if __name__ == "__main__":
         data_loader = init_data_loader(config_parser)
         trainer = run(config_parser, data_loader)
         log.update(test(trainer, data_loader))
-        if config.evaluate_topic:
+        if evaluate_topic:
             topic_path = Path(config.project_root) / "saved" / "topics" / saved_name / f"{value}"
             topic_evaluation(trainer, data_loader, topic_path)
         trainer.save_log(log, saved_path=saved_dir / f'{saved_name}.csv')
