@@ -51,6 +51,6 @@ if __name__ == "__main__":
         trainer = run(config_parser, data_loader)
         log.update(test(trainer, data_loader))
         if evaluate_topic:
-            topic_path = Path(config.project_root) / "saved" / "topics" / saved_name / f"{value}"
+            topic_path = Path(config.project_root) / "saved" / "topics" / saved_name / f"{value}_{seed}"
             log.update(topic_evaluation(trainer, data_loader, topic_path))
         trainer.save_log(log, saved_path=saved_dir / f'{saved_name}.csv')
