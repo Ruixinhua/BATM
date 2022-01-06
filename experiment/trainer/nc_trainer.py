@@ -15,13 +15,14 @@ class NCTrainer(BaseTrainer):
         self.data_loader = data_loader.train_loader
         arch_config = self.config["arch_config"]
         self.entropy_constraint = arch_config.get("entropy_constraint", False)
+        self.calculate_entropy = arch_config.get("calculate_entropy", self.entropy_constraint)
         self.alpha = arch_config.get("alpha", 0.001)
         self.len_epoch = len(self.data_loader)
         self.valid_loader = data_loader.valid_loader
         self.do_validation = self.valid_loader is not None
         self.log_step = int(np.sqrt(self.data_loader.batch_size))
         metrics = ["loss"] + [m.__name__ for m in self.metric_ftns]
-        if self.entropy_constraint:
+        if self.calculate_entropy:
             metrics.extend(["doc_entropy"])
         self.train_metrics = MetricTracker(*metrics, writer=self.writer)
         self.valid_metrics = MetricTracker(*metrics, writer=self.writer)
@@ -45,13 +46,14 @@ class NCTrainer(BaseTrainer):
         out_dict = {"label": batch_dict["label"], "loss": loss, "predict": output[0]}
         if self.entropy_constraint:
             loss += self.alpha * output[2]
+        if self.calculate_entropy:
             out_dict.update({"attention_weight": output[1], "entropy": output[2]})
         return out_dict
 
     def update_metrics(self, metrics, out_dict):
         n = len(out_dict["label"])
         metrics.update("loss", out_dict["loss"].item(), n=n)  # update metrix
-        if self.entropy_constraint:
+        if self.calculate_entropy:
             metrics.update("doc_entropy", out_dict["entropy"].item() / n, n=n)
         for met in self.metric_ftns:  # run metric functions
             metrics.update(met.__name__, met(out_dict["predict"], out_dict["label"]), n=n)
